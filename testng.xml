@@ -1,0 +1,38 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="MoviesAppSuite">
+    <test name="LoginPage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.LoginPageTest" />
+        </classes>
+    </test>
+    <test name="HomePage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.HomePageTest" />
+        </classes>
+    </test>
+    <test name="HeaderSection Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.HeaderSectionPageTest" />
+        </classes>
+    </test>
+    <test name="PopularPage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.PopularPageTest" />
+        </classes>
+    </test>
+    <test name="SearchPage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.SearchPageTest" />
+        </classes>
+    </test>
+    <test name="MovieDetailsPage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.MovieDetailsPageTest" />
+        </classes>
+    </test>
+    <test name="AccountPage Test" parallel="tests" thread-count="2">
+        <classes>
+            <class name="tests.AccountPageTest" />
+        </classes>
+    </test>
+</suite>
