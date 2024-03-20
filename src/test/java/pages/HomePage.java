@@ -1,79 +1,65 @@
 package pages;
-
-
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import java.time.Duration;
-
+import org.openqa.selenium.By;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.WebDriver;
+import java.util.*;
 public class HomePage {
-    private final WebDriver driver;
-    private final WebDriverWait wait;
+    public WebDriver driver;
 
-    public HomePage(WebDriver driver) {
+    By LoginButton=By.className("login-button");
+    By USERNAME=By.id("usernameInput");
+    By PASSWORD=By.id("passwordInput");
+
+
+    public  HomePage(WebDriver driver){
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-    }
-    public void login(String username, String password) {
-        driver.findElement(By.id("usernameInput")).sendKeys(username);
-        driver.findElement(By.id("passwordInput")).sendKeys(password);
-        driver.findElement(By.className("login-button")).click();
+        PageFactory.initElements(driver, this);
+
     }
 
-
-    public String getHeadingText() {
-        return driver.findElement(By.tagName("h1")).getText();
+    public String testHomeHeading(){
+        WebElement homeHeading = driver.findElement(By.linkText("Home"));
+        String  value = homeHeading.getText();
+        return  value;
     }
 
-    public boolean isPlayButtonDisplayed() {
-        WebElement playButton = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".home-movie-play-button")));
-        return playButton.isDisplayed();
+    public String testPopularHeading(){
+        WebElement popularHeading = driver.findElement(By.linkText("Popular"));
+        String  value = popularHeading.getText();
+        return  value;
     }
 
-    public boolean areMoviesDisplayed() {
-        // Implement logic to check if movies are displayed
-        return true; // Replace with actual implementation
+    public boolean testPlayButton(){
+        WebElement  playBtn = driver.findElement(By.className("home-movie-play-button"));
+        return  playBtn.isDisplayed();
     }
 
-    public String getContactUsSectionText() {
-        WebElement contactUsParagraph = new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".contact-us-paragraph")));
-        return contactUsParagraph.getText();
+    public  boolean testContactUsSection(){
+
+        WebElement googleIcon = driver.findElement(By.className("google-icon"));
+        WebElement twitterIcon = driver.findElement(By.className("twitter-icon"));
+        WebElement instagramIcon = driver.findElement(By.className("instagram-icon"));
+        WebElement youTubeIcon = driver.findElement(By.className("youtube-icon"));
+        WebElement contactUs = driver.findElement(By.className("contact-us-paragraph"));
+
+        boolean are_Visible = googleIcon.isDisplayed() && twitterIcon.isDisplayed() && instagramIcon.isDisplayed() && youTubeIcon.isDisplayed() && youTubeIcon.isDisplayed() && contactUs.isDisplayed();
+        if(are_Visible)
+            return are_Visible;
+
+        return contactUs.isDisplayed();
     }
 
-    public void clickOnMovie() {
-        // Use explicit wait to wait for the element to be clickable
-        WebElement movieElement = new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until(ExpectedConditions.elementToBeClickable(By.cssSelector(".poster")));
-        movieElement.click();
-    }
-    public boolean isWelcomeMessageDisplayed() {
-        try {
-            // Use an explicit wait for the presence of the welcome message
-            By welcomeMessage = null;
-            WebElement welcomeMessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(welcomeMessage));
 
-            // Check if the welcome message is displayed
-            if (welcomeMessageElement.isDisplayed()) {
-                return true;  // Base case: Welcome message is displayed, stop recursion
-            } else {
-                // Recursive case: Continue checking or interacting with the page
-                // (Update the logic based on your requirements)
-                return isWelcomeMessageDisplayed();
-            }
-        } catch (Exception e) {
-            return false;  // Handle exceptions or return false if the element is not found
-        }
+    public  boolean checkMoviesSections(){
+        List<WebElement> trendingSection =  driver.findElements(By.xpath("html/body/div/div/div[2]/div[1]/div//a"));
+        List<WebElement> originalSection = driver.findElements(By.xpath("html/body/div/div/div[2]/div[2]/div//a"));
+        return !trendingSection.isEmpty() && !originalSection.isEmpty();
     }
 
-    public void clickLogoutButton() {
-
+    public void LoginToApplication(String username , String password){
+        driver.findElement(USERNAME).sendKeys(username);
+        driver.findElement(PASSWORD).sendKeys(password);
+        driver.findElement(LoginButton).click();
     }
 }
-
-
-

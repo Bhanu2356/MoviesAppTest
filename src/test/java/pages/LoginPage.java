@@ -1,76 +1,70 @@
 package pages;
-
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import java.time.Duration;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.WebElement;
-
-
-import java.time.Duration;
-
+import org.openqa.selenium.WebDriver;
 
 public class LoginPage {
-    private WebDriver driver;
+    public WebDriver driver;
+    public WebDriverWait  wait;
 
-    public LoginPage(WebDriver driver) {
+    //Locating Specific Elements
+
+    WebElement logoElement ;
+    @FindBy(className = "sign-in-heading") WebElement headingElement;
+    @FindBy (id = "usernameInput") WebElement userEle;
+    @FindBy (id = "passwordInput") WebElement passwrdEle;
+    @FindBy(className = "login-button") WebElement loginBtn;
+    @FindBy(className = "error-message") WebElement errorMsg;
+
+    WebElement userLabel;
+    WebElement passwordLabel;
+
+
+    //Methods for interacting with Web Elements
+
+    public  LoginPage(WebDriver driver){
         this.driver = driver;
+        this.wait = new WebDriverWait(driver,Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
+        logoElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("login-website-logo")));
+        userLabel = driver.findElement(By.xpath("//label[text()='USERNAME']"));
+        passwordLabel = driver.findElement(By.xpath("//label[text()='PASSWORD']"));
+
+    }
+    public boolean checkTheLogoElement(){
+        return logoElement.isDisplayed();
+    }
+    public String checkTheHeadingElement(){
+        return headingElement.getText();
+    }
+    public String checkTheUserLabel(){
+        return userLabel.getText();
+    }
+    public String checkThePasswordLabel(){
+        return passwordLabel.getText();
     }
 
-    public boolean isLogoImageDisplayed() {
-        return driver.findElement(By.className("login-website-logo-container")).isDisplayed();
-    }
-
-    public String getHeadingText() {
-        return driver.findElement(By.tagName("h1")).getText();
-    }
-
-    public String getUsernameLabelText() {
-        return driver.findElement(By.className("input-label")).getText();
-    }
-
-    public String getPasswordLabelText() {
-        return driver.findElement(By.className("input-label")).getText();
-    }
-
-    public boolean isLoginButtonDisplayed() {
-        return driver.findElement(By.className("login-button")).isDisplayed();
-    }
-
-    // Implement methods for login functionality as needed
-
-    public void login(String username, String password) {
-        driver.findElement(By.id("usernameInput")).sendKeys(username);
-        driver.findElement(By.id("passwordInput")).sendKeys(password);
-        driver.findElement(By.className("login-button")).click();
-    }
-
-    public String getValidationMessage() {
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10)); // Adjust the timeout as needed
-        WebElement errorMessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".error-message")));
-        return errorMessageElement.getText();
-    }
-
-    public boolean isDashboardDisplayed() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10)); // Adjust the timeout as needed
-        WebElement dashboardElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("root")));
-        return dashboardElement.isDisplayed();
+    public boolean checkTheLoginBtn(){
+        return wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).isEnabled();
     }
 
 
-    public void enterUsername(String your_username) {
-
+    public String errorMessage(){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("error-message")));
+        return errorMsg.getText();
     }
 
-    public void enterPassword(String your_password) {
-
-    }
-
-    public void clickLoginButton() {
-
+    public void LoginToApplication(String username , String password){
+        userEle.sendKeys(username);
+        passwrdEle.sendKeys(password);
+        loginBtn.click();
     }
 }
-
 
 
 

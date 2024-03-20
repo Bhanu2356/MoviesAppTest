@@ -1,106 +1,59 @@
 package stepdefinitions;
 
+import io.cucumber.java.Before;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import pages.LoginPage;
-
+import java.time.Duration;
 
 public class LoginFunctionalitySteps {
-    private WebDriver driver;
-    private LoginPage loginPage;
+    public WebDriver driver;
 
-    @Given("^User is on the Login Page$")
-    public void userIsOnLoginPage() {
+    @Before
+    public void setup(){
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\saiva\\Downloads\\chromedriver-win32\\chromedriver-win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        loginPage = new LoginPage(driver);
+        driver = new ChromeDriver();
         driver.get("https://qamoviesapp.ccbp.tech");
     }
 
-    // Step definitions for verifying UI elements
-    @Then("^Website logo image is displayed$")
-    public void verifyLogoImageDisplayed() {
-        Assert.assertTrue(loginPage.isLogoImageDisplayed());
+    @Given("I am on login Page")
+    public void iAmOnLoginPage(){
+        driver.get("https://qamoviesapp.ccbp.tech");
+
     }
 
-    @Then("^Heading text is \"([^\"]*)\"$")
-    public void verifyHeadingText(String expectedHeading) {
-        Assert.assertEquals(loginPage.getHeadingText(), expectedHeading);
+    @When("I enter valid username and password")
+    public void iEnterValidUsernameAndPassword() {
+        driver.findElement(By.id("usernameInput")).sendKeys("rahul");
+        driver.findElement(By.id("passwordInput")).sendKeys("rahul@2021");
     }
 
-    @Then("^Username label text is \"([^\"]*)\"$")
-    public void verifyUsernameLabelText(String expectedText) {
-        Assert.assertEquals(loginPage.getUsernameLabelText(), expectedText);
+    @And("I click on login button")
+    public void iClickOnTheLoginButton() {
+        driver.findElement(By.className("login-button")).click();
     }
 
-    @Then("^Password label text is \"([^\"]*)\"$")
-    public void verifyPasswordLabelText(String expectedText) {
-        Assert.assertEquals(loginPage.getPasswordLabelText(), expectedText);
+    @Then("I should be redirect to home page")
+    public void iShouldBeRedirectedToTheHomePage(){
+        String expectedUrl = "https://qamoviesapp.ccbp.tech/";
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.urlToBe(expectedUrl));
+
+        String currentUrl = driver.getCurrentUrl();
+        Assert.assertEquals(expectedUrl, currentUrl, "URLs do not match");
     }
 
-    @Then("^Login button is displayed$")
-    public void verifyLoginButtonDisplayed() {
-        Assert.assertTrue(loginPage.isLoginButtonDisplayed());
+    @After
+    public void setdown(){
+        driver.close();
     }
 
-    @When("^User tries to login with empty fields$")
-    public void loginWithEmptyFields() {
-        loginPage.login("", "");
-    }
-
-    @When("^User tries to login with empty USERNAME$")
-    public void loginWithEmptyUsername() {
-        loginPage.login("", "password123");
-    }
-
-    @When("^User tries to login with an empty PASSWORD$")
-    public void loginWithEmptyPassword() {
-        loginPage.login("username123", "");
-    }
-
-    @When("^User tries to login with Invalid Credentials$")
-    public void loginWithInvalidCredentials() {
-        loginPage.login("correctUsername", "wrongPassword");
-    }
-
-    @When("^User logs in with Valid Credentials$")
-    public void loginWithValidCredentials() {
-        loginPage.login("rahul", "rahul@2021");
-    }
-
-    @Then("^User is redirected to the Dashboard$")
-    public void verifyRedirectToDashboard() {
-        Assert.assertTrue(loginPage.isDashboardDisplayed());
-    }
-
-    @Then("^Proper validation message for empty fields is displayed$")
-    public void verifyValidationMessageForEmptyFields() {
-        Assert.assertEquals(loginPage.getValidationMessage(), "Please enter both username and password.");
-    }
-
-    @Then("^Proper validation message for empty USERNAME is displayed$")
-    public void verifyValidationMessageForEmptyUsername() {
-        Assert.assertEquals(loginPage.getValidationMessage(), "Please enter a valid username.");
-    }
-
-    @Then("^Proper validation message for empty PASSWORD is displayed$")
-    public void verifyValidationMessageForEmptyPassword() {
-        Assert.assertEquals(loginPage.getValidationMessage(), "Please enter a valid password.");
-    }
-
-    @Then("^Proper validation message for Invalid Credentials is displayed$")
-    public void verifyValidationMessageForInvalidCredentials() {
-        Assert.assertEquals(loginPage.getValidationMessage(), "Invalid username or password. Please try again.");
-    }
-
-
-    @Then("^Close the browser window$")
-    public void closeBrowserWindow() {
-        driver.quit();
-    }
 }
-

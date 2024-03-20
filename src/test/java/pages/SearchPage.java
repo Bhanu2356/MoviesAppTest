@@ -1,36 +1,47 @@
 package pages;
-
-
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.WebElement;
-
+import org.openqa.selenium.By;
 import java.time.Duration;
-
-
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.WebDriver;
+import java.util.*;
 public class SearchPage {
-    private final WebDriver driver;
+    public WebDriver driver;
+    public WebDriverWait wait;
 
+    By LoginButton = By.className("login-button");
+    By USERNAME = By.id("usernameInput");
+    By PASSWORD = By.id("passwordInput");
 
-    // Constructor
     public SearchPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        PageFactory.initElements(driver, this);
     }
 
-    // Methods
+    public int searchAvatarMovieFunctionalities(String Movie) {
 
-    public void performSearch(String searchTerm) {
-        WebElement searchInput = new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until(ExpectedConditions.presenceOfElementLocated(By.className("search-empty-button")));
-        searchInput.sendKeys(searchTerm);
-        driver.findElement(By.cssSelector("[data-testid='searchButton']")).click();
+        WebElement searchInput = driver.findElement(By.id("search"));
+        searchInput.sendKeys(Movie);
+
+        List<WebElement> movieList = driver.findElements(By.className("movie-icon-item"));
+        return movieList.size();
     }
 
-    public int getSearchResultsCount() {
-        return driver.findElements(By.cssSelector(".search-result")).size();
+
+    public int searchSquidGameMovieFunctionalities(String Movie) {
+
+        WebElement searchInput = driver.findElement(By.id("search"));
+        searchInput.sendKeys(Movie);
+
+        List<WebElement> movieList = driver.findElements(By.className("movie-icon-item"));
+        return movieList.size();
+    }
+
+    public void LoginToApplication(String username, String password) {
+        driver.findElement(USERNAME).sendKeys(username);
+        driver.findElement(PASSWORD).sendKeys(password);
+        driver.findElement(LoginButton).click();
     }
 }
-

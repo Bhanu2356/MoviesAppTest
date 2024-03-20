@@ -1,62 +1,94 @@
 package tests;
 
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import pages.HomePage;
-import pages.LoginPage;
+import java.time.Duration;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
 import pages.SearchPage;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By;
 
 public class SearchPageTest {
+    public  static WebDriver driver;
+    SearchPage searchPage;
 
-    private WebDriver driver;
-    private LoginPage loginPage;
-    private HomePage homePage;
-    private SearchPage searchPage;
-    @BeforeClass
-    public void setUp() {
+    @BeforeMethod
+    public void setup() {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\saiva\\Downloads\\chromedriver-win32\\chromedriver-win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+        driver = new ChromeDriver();
         driver.get("https://qamoviesapp.ccbp.tech");
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-    }
-    @Test(priority = 1)
-    public void testLoginWithValidCredentials() {
-        loginPage.login("rahul", "rahul@2021");
-        Assert.assertTrue(loginPage.isDashboardDisplayed());
-    }
-
-    @BeforeClass
-    public void setUp1() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\saiva\\Downloads\\chromedriver-win32\\chromedriver-win32\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://qamoviesapp.ccbp.tech/search");
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
         searchPage = new SearchPage(driver);
     }
 
-    @Test(priority = 1)
-    public void testSearchFunctionality() {
-        // Test the Search functionality
-        String searchTerm = "Harry Potter";
-        searchPage.performSearch(searchTerm);
-
-        // Verify the count of movies displayed
-        int searchResultsCount = searchPage.getSearchResultsCount();
-        Assert.assertFalse(searchResultsCount > 0, "No search results found for '" + searchTerm + "'");
-        System.out.println("Number of movies found for '" + searchTerm + "': " + searchResultsCount);
+    @AfterMethod
+    public void setdown() {
+        driver.close();
     }
 
-    @AfterClass
-    public void tearDown() {
-        if (driver != null) {
-            driver.close();
+    @Test(priority = 1)
+    public void SearchAvatarMovie(){
+        searchPage.LoginToApplication("rahul","rahul@2021");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5000));
+
+        // Searching Avatar Movie
+
+        WebElement searchButton = driver.findElement(By.className("search-empty-button"));
+        searchButton.click();
+
+        WebElement searchButton1 = driver.findElement(By.className("search-button"));
+        searchButton1.click();
+
+
+        int value = searchPage.searchAvatarMovieFunctionalities("Avatar");
+
+        // Avatar Movie Detail
+
+        WebElement AvatarMovieDetail = driver.findElement(By.xpath("/html/body/div/div/ul/li[24]/a/img"));
+        AvatarMovieDetail.click();
+
+        String AvatarPage = driver.getCurrentUrl();
+        Assert.assertEquals(AvatarPage,"https://qamoviesapp.ccbp.tech/movies/cfdd2370-ab67-4e0e-99f9-3014cb532a17","Avatar Movie Detail Page Failed");
+
+        WebElement homePage = driver.findElement(By.linkText("Home"));
+        homePage.click();
+
+        if(value == 1){
+            System.out.println("Search Functionality is Working Expected");
+        }
+
+    }
+
+    @Test(priority = 2)
+    public void SerachSquidGameMovie(){
+        searchPage.LoginToApplication("rahul","rahul@2021");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5000));
+
+
+        // Searching Squid Game Movie
+
+        WebElement searchButtonMovie2 = driver.findElement(By.className("search-empty-button"));
+        searchButtonMovie2.click();
+
+        WebElement searchButtonMovie_2 = driver.findElement(By.className("search-button"));
+        searchButtonMovie_2.click();
+
+        int value1 = searchPage.searchSquidGameMovieFunctionalities("Squid Game");
+
+        // Squid Game Movie Detail
+        WebElement SquidGameMovieDetail = driver.findElement(By.xpath("/html/body/div/div/ul/li[26]/a/img"));
+        SquidGameMovieDetail.click();
+
+        String SquidGamePage = driver.getCurrentUrl();
+        Assert.assertEquals(SquidGamePage,"https://qamoviesapp.ccbp.tech/movies/828f0c17-3f21-4e34-9671-54dfb66fcac9","Avatar Movie Detail Page Failed");
+
+        WebElement homePage = driver.findElement(By.linkText("Home"));
+        homePage.click();
+
+        if(value1 == 1){
+            System.out.println("Search Functionality is Working Expected");
         }
     }
 }
-
