@@ -6,8 +6,7 @@ import org.openqa.selenium.support.PageFactory;
 
 
 public class HeaderPage {
-    public WebDriver driver;
-
+    WebDriver driver;
 
 
     By LoginButton=By.className("login-button");
@@ -50,4 +49,6 @@ public class HeaderPage {
         driver.findElement(PASSWORD).sendKeys(password);
         driver.findElement(LoginButton).click();
     }
+
+
 }
